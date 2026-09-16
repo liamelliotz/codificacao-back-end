@@ -10,3 +10,23 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason) => {
     console.error('[PROMISE REJEITADA - unhandledRejection]: ', reason);
 });
+
+app.get('/sucesso', (req, res) => {
+    res.json({success: true, message: 'Operação realizada com sucesso!'});
+});
+
+app.get('/erro-sincrono', (req, res, next) => {
+    try{
+        throw new Error('Falha ao Processar a Regra de Negócio!');
+    }catch(erro){
+        next(erro);
+    }
+});
+
+app.get('/erro-assincrono', async (req, res, next) =>{
+    try{
+        await Promise.reject(new Error('Erro na consulta no banco de dados externo'));
+    }catch(erro){
+        next(erro);
+    }
+})
