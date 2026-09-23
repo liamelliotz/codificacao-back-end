@@ -36,7 +36,7 @@ export class ConvidadosService {
         const index = this.convidados.findIndex(
             (convidados) => convidados.id === id );
 
-        if (index === -1) {
+        if ( index === -1) {
             throw new NotFoundException(`[ADMINISTRADOR] Convidado com ID ${id} não encontrado!`);
         }
 
