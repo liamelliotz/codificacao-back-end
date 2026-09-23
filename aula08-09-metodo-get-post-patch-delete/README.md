@@ -1,19 +1,32 @@
-# Aula 08-09 — Métodos PATCH e DELETE
+# Aula 08-09 — Métodos GET, POST, PATCH e DELETE
 
-Nesta aula foram adicionados os métodos HTTP **PATCH** e **DELETE** à API desenvolvida anteriormente com NestJS.
+Nesta aula foi desenvolvida uma API REST utilizando **NestJS**, trabalhando com os principais métodos HTTP para gerenciamento de convidados:
 
-O objetivo foi trabalhar a **atualização e remoção de convidados**, além do tratamento de erros quando o ID informado não existe.
+* **GET** — consulta de dados
+* **POST** — criação de convidados
+* **PATCH** — atualização parcial de dados
+* **DELETE** — remoção de convidados
+
+O objetivo foi compreender como os métodos HTTP são utilizados em conjunto com **Controllers**, **Services**, parâmetros de rota, corpo da requisição e tratamento de erros.
+
+---
 
 ## 📚 Conteúdos abordados
 
+* Método `GET`
+* Método `POST`
 * Método `PATCH`
 * Método `DELETE`
+* `@Get()`
+* `@Post()`
 * `@Patch()`
 * `@Delete()`
 * `@Param()`
 * `@Body()`
 * `@HttpCode()`
 * `NotFoundException`
+* Criação de dados
+* Consulta de dados
 * Atualização de dados
 * Remoção de dados
 * Validação de IDs
@@ -32,11 +45,79 @@ O objetivo foi trabalhar a **atualização e remoção de convidados**, além do
 
 ---
 
+# 🔎 GET — Consultar convidados
+
+O método `GET` foi utilizado para realizar consultas na API.
+
+Ele permite acessar os convidados cadastrados e também consultar um convidado específico através do seu ID.
+
+### Listar convidados
+
+#### Rota
+
+```http
+GET /convidados
+```
+
+Essa rota retorna a lista de convidados cadastrados.
+
+### Buscar convidado por ID
+
+#### Rota
+
+```http
+GET /convidados/:id
+```
+
+#### Exemplo
+
+```http
+GET /convidados/2
+```
+
+O `@Param('id')` permite capturar o ID informado na URL.
+
+---
+
+# ➕ POST — Criar convidado
+
+O método `POST` foi utilizado para cadastrar um novo convidado.
+
+### Rota
+
+```http
+POST /convidados
+```
+
+### Corpo da requisição
+
+```json
+{
+    "nome": "Carlos",
+    "idade": 25
+}
+```
+
+O `@Body()` permite acessar os dados enviados no corpo da requisição.
+
+### Exemplo no Controller
+
+```ts
+@Post()
+criarConvidado(@Body() dados: CriarConvidadoDto) {
+    return this.convidadosService.criarConvidado(dados);
+}
+```
+
+O Controller recebe os dados e encaminha a operação para o Service, mantendo a separação de responsabilidades.
+
+---
+
 # ✏️ PATCH — Atualizar idade
 
-O método `PATCH` foi adicionado para permitir a atualização parcial dos dados de um convidado.
+O método `PATCH` foi utilizado para realizar uma atualização parcial dos dados de um convidado.
 
-Nesta aula, o método foi utilizado especificamente para atualizar a **idade** de um convidado através do seu ID.
+Nesta implementação, o método é utilizado especificamente para atualizar a **idade** através do ID.
 
 ### Rota
 
@@ -102,175 +183,5 @@ Depois da validação, a idade pode ser atualizada:
 
 ```ts
 atualizarIdade(id: number, idade: number) {
-    const convidado = this.encontrarConvidado(id);
-
-    console.log(`[ADMINISTRADOR] Atualizando idade do ID ${id}`);
-
-    convidado.idade = idade;
-
-    return convidado;
-}
+    const convidado = this
 ```
-
----
-
-# 🗑️ DELETE — Remover convidado
-
-O método `DELETE` foi adicionado para permitir a remoção de um convidado através do seu ID.
-
-### Rota
-
-```http
-DELETE /convidados/:id
-```
-
-### Exemplo
-
-```http
-DELETE /convidados/3
-```
-
-### Controller
-
-```ts
-@Delete(':id')
-@HttpCode(204)
-removerConvidado(@Param('id') id: string) {
-    this.convidadosService.removerConvidadoLista(+id);
-}
-```
-
-O `@Param('id')` captura o ID informado na URL.
-
-O `@HttpCode(204)` define o status HTTP **204 No Content** para uma remoção realizada com sucesso.
-
----
-
-## 🔎 Verificação antes da remoção
-
-O Service procura o índice do convidado na lista:
-
-```ts
-const index = this.convidados.findIndex(
-    (convidado) => convidado.id === id
-);
-```
-
-Caso o ID não exista, é lançada uma exceção:
-
-```ts
-if (index === -1) {
-    throw new NotFoundException(
-        `[ADMINISTRADOR] Convidado com ID ${id} não encontrado!`
-    );
-}
-```
-
-Caso o convidado exista, ele é removido da lista:
-
-```ts
-return this.convidados.splice(index, 1);
-```
-
----
-
-# ⚠️ Tratamento de erros
-
-Foi utilizado o `NotFoundException` do NestJS para tratar requisições que tentam acessar um convidado inexistente.
-
-```ts
-import { Injectable, NotFoundException } from "@nestjs/common";
-```
-
-Por exemplo, ao tentar atualizar:
-
-```http
-PATCH /convidados/9
-```
-
-quando o ID `9` não existe, a API retorna:
-
-```json
-{
-    "message": "[ADMINISTRADOR] Convidado com ID 9 não encontrado!",
-    "error": "Not Found",
-    "statusCode": 404
-}
-```
-
-O mesmo tratamento é utilizado no método `DELETE`.
-
----
-
-# 📝 Logs
-
-Os logs das operações de atualização e remoção foram colocados no **Service depois da validação**.
-
-### PATCH
-
-```ts
-const convidado = this.encontrarConvidado(id);
-
-console.log(`[ADMINISTRADOR] Atualizando idade do ID ${id}`);
-```
-
-Dessa forma, se o ID não existir, o log de atualização não será exibido.
-
-### DELETE
-
-```ts
-if (index === -1) {
-    throw new NotFoundException(
-        `[ADMINISTRADOR] Convidado com ID ${id} não encontrado!`
-    );
-}
-
-console.log(
-    `[ADMINISTRADOR] Convidado com ID ${id} removido com sucesso!`
-);
-```
-
-Assim, a mensagem de sucesso somente aparece quando o convidado realmente é encontrado e removido.
-
----
-
-# 📂 Estrutura relacionada à aula
-
-```text
-aula08-09-metodo-get-post-patch-delete/
-│
-├── src/
-│   └── convidados/
-│       ├── convidados.controller.ts
-│       ├── convidados.service.ts
-│       └── criar-convidado.dto.ts
-│
-├── .gitignore
-├── .oxlintrc.json
-├── .prettierrc
-├── README.md
-├── package.json
-├── tsconfig.json
-└── ...
-```
-
----
-
-# 🔗 Endpoints adicionados nesta aula
-
-| Método   | Rota                          | Função                           | Status |
-| -------- | ----------------------------- | -------------------------------- | ------ |
-| `PATCH`  | `/convidados/:id`             | Atualiza a idade do convidado    | `200`  |
-| `DELETE` | `/convidados/:id`             | Remove um convidado              | `204`  |
-| `PATCH`  | `/convidados/:id` inexistente | Retorna convidado não encontrado | `404`  |
-| `DELETE` | `/convidados/:id` inexistente | Retorna convidado não encontrado | `404`  |
-
----
-
-# 🎯 Objetivo da aula
-
-O objetivo desta aula foi adicionar os métodos **PATCH** e **DELETE** à API desenvolvida na aula anterior.
-
-Também foram trabalhados o uso de parâmetros de rota, atualização e remoção de dados, além do tratamento de erros utilizando `NotFoundException`.
-
-Com isso, a API passou a possuir as operações de **atualização e exclusão**, complementando os métodos desenvolvidos anteriormente.
