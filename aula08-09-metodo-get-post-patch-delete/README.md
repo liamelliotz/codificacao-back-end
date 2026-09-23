@@ -1,187 +1,120 @@
-# Aula 08-09 — Métodos GET, POST, PATCH e DELETE
+Aula 08-09 — Métodos GET, POST, PATCH e DELETE
 
-Nesta aula foi desenvolvida uma API REST utilizando **NestJS**, trabalhando com os principais métodos HTTP para gerenciamento de convidados:
+Nesta aula foi desenvolvida uma API REST utilizando NestJS, trabalhando com os métodos HTTP GET, POST, PATCH e DELETE para gerenciamento de convidados.
 
-* **GET** — consulta de dados
-* **POST** — criação de convidados
-* **PATCH** — atualização parcial de dados
-* **DELETE** — remoção de convidados
+🚀 Tecnologias
 
-O objetivo foi compreender como os métodos HTTP são utilizados em conjunto com **Controllers**, **Services**, parâmetros de rota, corpo da requisição e tratamento de erros.
+Node.js
 
----
+NestJS
 
-## 📚 Conteúdos abordados
+TypeScript
 
-* Método `GET`
-* Método `POST`
-* Método `PATCH`
-* Método `DELETE`
-* `@Get()`
-* `@Post()`
-* `@Patch()`
-* `@Delete()`
-* `@Param()`
-* `@Body()`
-* `@HttpCode()`
-* `NotFoundException`
-* Criação de dados
-* Consulta de dados
-* Atualização de dados
-* Remoção de dados
-* Validação de IDs
-* Tratamento de recursos inexistentes
-* Separação de responsabilidades entre Controller e Service
+REST API
 
----
+HTTP
 
-## 🚀 Tecnologias utilizadas
+📚 Conceitos utilizados
 
-* Node.js
-* NestJS
-* TypeScript
-* REST API
-* HTTP
+@Get()
 
----
+@Post()
 
-# 🔎 GET — Consultar convidados
+@Patch()
 
-O método `GET` foi utilizado para realizar consultas na API.
+@Delete()
 
-Ele permite acessar os convidados cadastrados e também consultar um convidado específico através do seu ID.
+@Param()
 
-### Listar convidados
+@Body()
 
-#### Rota
+@HttpCode()
 
-```http
+NotFoundException
+
+Controllers e Services
+
+Manipulação de arrays
+
+🔎 GET — Listar convidados
 GET /convidados
-```
 
-Essa rota retorna a lista de convidados cadastrados.
 
-### Buscar convidado por ID
+Retorna a lista de convidados cadastrados.
 
-#### Rota
+@Get()
+listarConvidados() {
+    return this.convidadosService.listarConvidados();
+}
 
-```http
-GET /convidados/:id
-```
-
-#### Exemplo
-
-```http
-GET /convidados/2
-```
-
-O `@Param('id')` permite capturar o ID informado na URL.
-
----
-
-# ➕ POST — Criar convidado
-
-O método `POST` foi utilizado para cadastrar um novo convidado.
-
-### Rota
-
-```http
+➕ POST — Criar convidado
 POST /convidados
-```
 
-### Corpo da requisição
 
-```json
+Exemplo de corpo:
+
 {
     "nome": "Carlos",
     "idade": 25
 }
-```
 
-O `@Body()` permite acessar os dados enviados no corpo da requisição.
 
-### Exemplo no Controller
+O @Body() recebe os dados enviados na requisição.
 
-```ts
-@Post()
-criarConvidado(@Body() dados: CriarConvidadoDto) {
-    return this.convidadosService.criarConvidado(dados);
-}
-```
+Atualmente, o POST apenas recebe e retorna os dados. Ele não adiciona o convidado ao array.
 
-O Controller recebe os dados e encaminha a operação para o Service, mantendo a separação de responsabilidades.
-
----
-
-# ✏️ PATCH — Atualizar idade
-
-O método `PATCH` foi utilizado para realizar uma atualização parcial dos dados de um convidado.
-
-Nesta implementação, o método é utilizado especificamente para atualizar a **idade** através do ID.
-
-### Rota
-
-```http
+✏️ PATCH — Atualizar idade
 PATCH /convidados/:id
-```
 
-### Exemplo
 
-```http
+Exemplo:
+
 PATCH /convidados/3
-```
 
-### Corpo da requisição
 
-```json
+Corpo:
+
 {
     "idade": 25
 }
-```
 
-### Controller
 
-```ts
+O @Param('id') recebe o ID e o @Body('idade') recebe a nova idade.
+
 @Patch(':id')
-atualizarIdade(
-    @Param('id') id: string,
-    @Body('idade') idade: number
-) {
+atualizarIdade(@Param('id') id: string, @Body('idade') idade: number) {
     return this.convidadosService.atualizarIdade(+id, idade);
 }
-```
 
-O `@Param('id')` captura o ID informado na URL.
 
-O `@Body('idade')` captura a nova idade enviada no corpo da requisição.
+Caso o convidado não exista, é utilizado NotFoundException, retornando erro 404.
 
-O operador `+` converte o ID recebido como `string` para `number`.
+🗑️ DELETE — Remover convidado
+DELETE /convidados/:id
 
----
 
-## 🔎 Verificação do convidado
+Exemplo:
 
-Antes de realizar a atualização, o Service verifica se o convidado existe através do método `encontrarConvidado()`:
+DELETE /convidados/3
 
-```ts
-encontrarConvidado(id: number) {
-    const convidado = this.convidados.find(
-        (buscarConvidado) => buscarConvidado.id === id
-    );
 
-    if (!convidado) {
-        throw new NotFoundException(
-            `[ADMINISTRADOR] Convidado com ID ${id} não encontrado!`
-        );
-    }
+O convidado é localizado pelo ID e removido utilizando splice().
 
-    return convidado;
+@Delete(':id')
+@HttpCode(204)
+removerConvidado(@Param('id') id: string) {
+    this.convidadosService.removerConvidadoLista(+id);
 }
-```
 
-Depois da validação, a idade pode ser atualizada:
 
-```ts
-atualizarIdade(id: number, idade: number) {
-    const convidado = this
-```
+O @HttpCode(204) define a resposta como 204 — No Content.
+
+📌 Rotas
+Método	Rota	Função
+GET	/convidados	Lista convidados
+POST	/convidados	Recebe dados do convidado
+PATCH	/convidados/:id	Atualiza a idade
+DELETE	/convidados/:id	Remove convidado
+🎯 Objetivo
+
+Praticar a criação de uma API REST com NestJS, utilizando Controllers, Services, parâmetros, corpo da requisição e tratamento de erros.
