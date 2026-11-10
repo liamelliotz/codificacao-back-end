@@ -1,0 +1,200 @@
+{
+    "sistemaEscolar": "Escola do Norte",
+    "redeDeEnsino": "pública",
+    "quantitativoDeProfessores": 10,
+    "professores": [
+        "Ana Castro Alves",
+        "Emilia Ferraz Albuquerque",
+        "Bernardo Almeida Fontinele",
+        "Caio Martins Costa",
+        "Flora Santos Pinheiro",
+        "Felipe Bueno Munhoz",
+        "Fernanda Fernandes Rodrigues",
+        "Gabriel Santos Queiroz",
+        "Gina Bittencourt Silva",
+        "Leonardo Rafael Zanonni"
+    ],
+    "quantitativoDeAlunos": 250,
+    "alunosPorTurma": 25,
+    "alunosA1": [
+        {
+            "aluna": "Ana Beatriz",
+            "nota": 9.5
+        },
+        {
+            "aluno": "Arthur Oliveira",
+            "nota": 7.4
+        },
+        {
+            "aluna": "Amanda Costa",
+            "nota": 9.6
+        },
+        {
+            "aluno": "Bernardo Lima",
+            "nota": 5
+        },
+        {
+            "aluna": "Bianca Ferreira",
+            "nota": 6.7
+        },
+        {
+            "aluno": "Bruno Almeida",
+            "nota": 7
+        },
+        {
+            "aluna": "Camila Rodrigues",
+            "nota": 2
+        },
+        {
+            "aluno": "Carlos Eduardo",
+            "nota": 5
+        },
+        {
+            "aluna": "Daniela Martins",
+            "nota": 5
+        },
+        {
+            "aluno": "Diego Carvalho",
+            "nota": 9.5
+        },
+        {
+            "aluno": "Eduardo Pereira",
+            "nota": 8
+        },
+        {
+            "aluna": "Elisa Monteiro",
+            "nota": 7
+        },
+        {
+            "aluno": "Felipe Gomes",
+            "nota": 8
+        },
+        {
+            "aluna": "Fernanda Ribeiro",
+            "nota": 6
+        },
+        {
+            "aluno": "Gabriel Barbosa",
+            "nota": 5
+        },
+        {
+            "aluna": "Giovanna Mendes",
+            "nota": 7
+        },
+        {
+            "aluno": "Henrique Nascimento",
+            "nota": 6
+        },
+        {
+            "aluna": "Isabela Cardoso",
+            "nota": 9
+        },
+        {
+            "aluno": "João Pedro Moreira",
+            "nota": 9
+        },
+        {
+            "aluna": "Júlia Fernandes",
+            "nota": 7
+        },
+        {
+            "aluno": "Kauã Batista",
+            "nota": 9
+        },
+        {
+            "aluna": "Larissa Teixeira",
+            "nota": 8
+        },
+        {
+            "aluno": "Lucas Azevedo",
+            "nota": 6
+        },
+        {
+            "aluna": "Mariana Castro",
+            "nota": 8
+        },
+        {
+            "aluno": "Nicolas Duarte",
+            "nota": 9
+        }
+    ],
+    "turmas": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10"
+    ],
+    "disciplinas": [
+        {
+            "id": 1,
+            "nome": "Língua Portuguesa",
+            "cargaHorariaSemanal": 4
+        },
+        {
+            "id": 2,
+            "nome": "Arte",
+            "cargaHorariaSemanal": 1
+        },
+        {
+            "id": 3,
+            "nome": "Educação Física",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 4,
+            "nome": "Língua Inglesa",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 5,
+            "nome": "Matemática",
+            "cargaHorariaSemanal": 4
+        },
+        {
+            "id": 6,
+            "nome": "Biologia",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 7,
+            "nome": "Física",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 8,
+            "nome": "Química",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 9,
+            "nome": "História",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 10,
+            "nome": "Geografia",
+            "cargaHorariaSemanal": 2
+        },
+        {
+            "id": 11,
+            "nome": "Filosofia",
+            "cargaHorariaSemanal": 1
+        },
+        {
+            "id": 12,
+            "nome": "Sociologia",
+            "cargaHorariaSemanal": 1
+        },
+        {
+            "id": 13,
+            "nome": "Redação",
+            "cargaHorariaSemanal": 1
+        }
+    ]
+}

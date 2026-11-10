@@ -1,0 +1,25 @@
+{
+    "redeSocial":"X",
+    "texto":"Sou um tolo com coração, mas sem cérebro, e você é um tolo com cérebro, mas sem coração; e nós dois somos infelizes e ambos sofremos.",
+    "autor":"Liam Elliot",
+    "data":"20-01-2026",
+    "curtidas":[
+        "Gabriel Santos",
+        "Thiago Thanatos",
+        "Russo Inglês"
+    ],
+    "respostas":[
+        {
+            "autor":"Gabriel Santos",
+            "respostas":"Agora deu, virou poeta."
+        },
+        {
+            "autor":"Thiago Thanatos",
+            "respostas":"Infelizmente ele não resistiu ao final do século 20"
+        },
+        {
+            "autor":"Russo Inglês",
+            "respostas":"Fiódor estaria orgulhoso"
+        }
+    ]
+}
