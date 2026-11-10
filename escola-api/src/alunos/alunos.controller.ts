@@ -6,13 +6,16 @@ import {
   Param,
   Patch,
   Delete,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { AlunosService } from './alunos.service.js';
 import { CreateAlunoDto } from './dto/create-alunos.dto.js';
 import { UpdateAlunoDto } from './dto/update-aluno.dto.js';
 
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('alunos')
 @Controller('alunos')
@@ -42,10 +45,30 @@ export class AlunoController {
   }
 
   // Listar todos os alunos
+//  @Get()
+//  @ApiOperation({
+//    summary: 'Retorna a lista de todos os alunos cadastrados.',
+//    description: 'Consulta e retorna todos os alunos registrados no sistema.',
+//  })
+//  @ApiResponse({
+//    status: 200,
+//    description: 'Lista de alunos retornada com sucesso.',
+//  })
+//  @ApiResponse({
+//    status: 404,
+//    description: 'Nenhum aluno encontrado.',
+//  })
+//  @ApiResponse({
+//    status: 500,
+//    description: 'Erro interno do servidor ao consultar os alunos.',
+//  })
+//  findAll() {
+//    return this.alunoService.findAll();
+//  }
+
   @Get()
   @ApiOperation({
-    summary: 'Retorna a lista de todos os alunos cadastrados.',
-    description: 'Consulta e retorna todos os alunos registrados no sistema.',
+    summary: 'Retorna a lista de alunos cadastrados com paginação.',
   })
   @ApiResponse({
     status: 200,
@@ -59,8 +82,23 @@ export class AlunoController {
     status: 500,
     description: 'Erro interno do servidor ao consultar os alunos.',
   })
-  findAll() {
-    return this.alunoService.findAll();
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Número da página(padrão: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Itens por página(padrão: 10',
+  })
+  findAllPage(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return this.alunoService.findAllPage(page, limit);
   }
 
   // Buscar aluno por ID

@@ -17,10 +17,30 @@ export class AlunosService {
     return createdAluno.save();
   }
 
-  async findAll(): Promise<Aluno[]> {
+  async findAllPage(page:number, limit: number){
+    
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.alunoModel.find().skip(skip).limit(limit).exec(),
+      this.alunoModel.countDocuments().exec()
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
     return this.alunoModel.find().exec();
     // GET
   }
+
+//  async findAll(): Promise<Aluno[]> {
+//  return this.alunoModel.find().exec();
+//  }
 
   async findOne(id: string): Promise<Aluno> {
     const aluno = await this.alunoModel.findById(id).exec();
