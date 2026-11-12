@@ -1,10 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  InternalServerErrorException,
+  BadRequestException
+} from '@nestjs/common';
+import { InjectModel,  } from '@nestjs/mongoose';
+import { Model, QueryFilter } from 'mongoose';
+import { MongoServerError } from 'mongodb';
 import { CreateAlunoDto } from './dto/create-alunos.dto.js';
 import { UpdateAlunoDto } from './dto/update-aluno.dto.js';
 import { Aluno, AlunoDocument } from './schemas/aluno.schema.js';
-
 
 @Injectable()
 export class AlunosService {
@@ -14,35 +20,51 @@ export class AlunosService {
   ) {}
 
   async create(createAlunoDto: CreateAlunoDto): Promise<Aluno> {
-    const createdAluno = new this.alunoModel(createAlunoDto);
-    return createdAluno.save();
+    try {
+      const createdAluno = new this.alunoModel(createAlunoDto);
+      return await createdAluno.save();
+    } catch (error: unknown) {
+      if (
+        error instanceof MongoServerError 
+        &&
+        error.code === 11000
+      ) {
+        throw new ConflictException('Matrícula duplicada. A matrícula deve ser única.');
+      }
+      throw new InternalServerErrorException('Erro ao Processar a solicitação. Por favor, tente novamente mais tarde.');
+    }
   }
 
-  async findAllPageFilter(page:number, limit: number, nome?: string, curso?: string, orderBy?: string, orderDirection?: 'asc' | 'desc',
-  ){
-    
+  async findAllPageFilter(
+    page: number,
+    limit: number,
+    nome?: string,
+    curso?: string,
+    orderBy?: string,
+    orderDirection?: 'asc' | 'desc',
+  ) {
     const skip = (page - 1) * limit;
     const filtro: any = {};
 
-    if(nome){
+    if (nome) {
       filtro.nome = {
         $regex: new RegExp(nome, 'i'),
       };
     }
 
-    if(curso){
+    if (curso) {
       filtro.cursos = curso;
     }
 
     const sort: any = {};
 
-    if(orderBy){
+    if (orderBy) {
       sort[orderBy] = orderDirection === 'desc' ? -1 : 1;
     }
 
     const [data, total] = await Promise.all([
       this.alunoModel.find(filtro).sort(sort).skip(skip).limit(limit).exec(),
-      this.alunoModel.countDocuments(filtro).exec()
+      this.alunoModel.countDocuments(filtro).exec(),
     ]);
 
     return {
@@ -58,9 +80,9 @@ export class AlunosService {
     // GET
   }
 
-//  async findAll(): Promise<Aluno[]> {
-//  return this.alunoModel.find().exec();
-//  }
+  //  async findAll(): Promise<Aluno[]> {
+  //  return this.alunoModel.find().exec();
+  //  }
 
   async findOne(id: string): Promise<Aluno> {
     const aluno = await this.alunoModel.findById(id).exec();
@@ -98,6 +120,6 @@ export class AlunosService {
     return alunoRemovido;
 
     //DELETE
-   //CRUD
+    //CRUD
   }
 }

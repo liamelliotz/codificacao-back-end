@@ -15,6 +15,7 @@ export class Aluno{
         required: true
     })
     idade: number;
+    
     @Prop({
         required: true,
         unique: true
