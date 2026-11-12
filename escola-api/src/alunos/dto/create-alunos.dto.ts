@@ -32,7 +32,7 @@ export class CreateAlunoDto {
   idade: number;
 
   @ApiProperty({
-    example: '1234',
+    example: '202200678',
     description: 'Número de matrícula do aluno',
   })
   @IsString()
